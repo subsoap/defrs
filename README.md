@@ -3,6 +3,8 @@ A collection of useful general resources made ready to be used with the Defold g
 
 The purpose of this shader collection is for each to be generally useful, efficient, and to work on Open GL ES 2.0. If you've made a shader which you think would be useful to others please consider contributing it via a pull request. If you can improve an existing shader to add useful features or increase performance please submit your changes!
 
+The license for the files included are [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) unless otherwise noted.
+
 ## Installation
 You can use DefRS in your own project by adding this project as a [Defold library dependency](http://www.defold.com/manuals/libraries/). Open your game.project file and in the dependencies field under project add:
 
