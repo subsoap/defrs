@@ -1,0 +1,65 @@
+-- This shows you how to detect a user pressing Alt+F4, which is a common way to force close a program on Windows
+-- General behavior for Alt+F4 is to be instant close without waiting for action.pressed on F4
+-- You may wish to instead show a dialog and let user confirm closing, but instant close is best
+-- Make sure you save user data properly before closing if so you'll want to make a copy of this script to customize
+-- If you are publishing on Windows then you want to include this as an option
+-- You can also detect Alt+Enter in a similar way - it is a common way to toggle fullscreen mode in Windows programs
+-- You can toggle between window mode and fullscreen with DefOS
+-- Your game.input_binding must have alt and f4
+--[[
+key_trigger {
+  input: KEY_LALT
+  action: "alt"
+}
+key_trigger {
+  input: KEY_RALT
+  action: "alt"
+}
+key_trigger {
+  input: KEY_F4
+  action: "f4"
+}
+--]]
+
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.alt_held_down = false
+	self.sysinfo = sys.get_sys_info()
+end
+
+function on_input(self, action_id, action)
+	if self.sysinfo.system_name == "Windows" then
+		if action_id == hash("alt") then
+			self.alt_held_down = true
+		end    
+		if action_id == hash("alt") and action.released then
+			self.alt_held_down = false
+		end      
+		if action_id == hash("f4") and self.alt_held_down then
+			msg.post("@system:", "exit", {code = 0})
+		end
+	end
+end
+
+
+--[[
+function on_input(self, action_id, action)
+	sysinfo.system_name == "Windows" then
+		if action_id == hash("alt") then
+			self.alt_held_down = true
+			print("alt held down")
+		end    
+		if action_id == hash("alt") and action.released then
+			self.alt_held_down = false
+			print("releaseing alt")
+		end      
+		if action_id == hash("f4") and self.alt_held_down then
+			print("show confirm dialog to close game")
+		end
+		if action_id == hash("f4") and action.pressed then
+			print("f4")
+		end
+	end
+end
+--]]

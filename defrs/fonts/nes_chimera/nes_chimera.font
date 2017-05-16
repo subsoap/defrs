@@ -1,0 +1,4 @@
+font: "/defrs/fonts/nes_chimera/nes_chimera.ttf"
+material: "/builtins/fonts/font.material"
+size: 16
+all_chars: true
