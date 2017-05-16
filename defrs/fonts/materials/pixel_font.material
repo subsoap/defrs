@@ -1,5 +1,5 @@
 name: "pixel_font"
-tags: "gui"
+tags: "tile"
 vertex_program: "/defrs/fonts/materials/pixel_font.vp"
 fragment_program: "/defrs/fonts/materials/pixel_font.fp"
 vertex_constants {
