@@ -10,7 +10,7 @@ You can use DefRS in your own project by adding this project as a [Defold librar
 
 	https://github.com/subsoap/defrs/archive/master.zip
 
-Once installed, you can use the resources you wish to use from their associated folders much like you would builtin materials. When you make builds Defold will only package the files you actually use so do not worry about the extra files included. Check your build folder to see for yourself.
+Once installed, you can use the resources you wish to use from their associated folders much like you would builtin resources. When you make builds Defold will only package the files you actually use so do not worry about the extra files included. Check your build folder to see for yourself.
 
 Check the source files and examples for full usage.
 
