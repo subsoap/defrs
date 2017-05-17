@@ -28,7 +28,6 @@ function update(self, dt)
 	end
 	
 
-	self.second_color = colors.hue_shift(self.second_color,self.timer*100)
-
-	go.set("#label2","color",self.second_color)
+	go.set("#label2","color",colors.hue_shift(self.second_color,math.cos(self.timer*10)))
+	go.set("#label3","color",colors.hue_shift(self.second_color,self.timer*30))
 end
