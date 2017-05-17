@@ -2,6 +2,7 @@
 title = DefRS
 version = 1.0
 dependencies = 
+custom_resources = 
 
 [input]
 game_binding = /input/game.input_bindingc

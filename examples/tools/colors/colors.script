@@ -1,5 +1,7 @@
 local colors = require("defrs.utils.colors")
 
+
+
 function init(self)
 	pprint(colors.red)
 	pprint(colors.get_random_color())
@@ -8,6 +10,7 @@ function init(self)
 	self.timer = 0
 	self.step = 1
 	self.second_color = colors.blue
+
 end
 
 function update(self, dt)
