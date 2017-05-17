@@ -3,9 +3,11 @@ local colors = require("defrs.utils.colors")
 function init(self)
 	pprint(colors.red)
 	pprint(colors.get_random_color())
+	pprint(colors.hue_shift(colors.red,1))
 	
 	self.timer = 0
 	self.step = 1
+	self.second_color = colors.blue
 end
 
 function update(self, dt)
@@ -24,4 +26,9 @@ function update(self, dt)
 	elseif self.step == 3 then
 		go.set("#label","color",colors.get_random_color())
 	end
+	
+
+	self.second_color = colors.hue_shift(self.second_color,self.timer*100)
+
+	go.set("#label2","color",self.second_color)
 end

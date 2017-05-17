@@ -52,5 +52,16 @@ function M.hex2rgba(hex) -- normalized
     end
 end
 
+function M.hue_shift(color, shift)
+	local r,g,b = color.x, color.y, color.z
+	local frequency = 0.3
+
+	r = math.sin(frequency*shift + 0) 
+	g = math.sin(frequency*shift + 2)
+	b = math.sin(frequency*shift + 4)
+	return vmath.vector4(r, g, b, color.w)	
+end
+
+
 
 return M
