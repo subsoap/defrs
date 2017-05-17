@@ -1,0 +1,6 @@
+go.property("tint",vmath.vector4(1.0, 1.0, 1.0, 1.0))
+
+function init(self)
+	sprite.set_constant("#sprite", "tint", go.get("#script", "tint"))
+	print( go.get("#script", "tint"))
+end
