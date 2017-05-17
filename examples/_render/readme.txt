@@ -1,0 +1,1 @@
+The only thing this custom render script does is increase the render near/far range from -1 - 1 to -1000 to 1000 for general uses.

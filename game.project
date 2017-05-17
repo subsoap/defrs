@@ -7,8 +7,8 @@ dependencies =
 game_binding = /input/game.input_bindingc
 
 [bootstrap]
-main_collection = /examples/input/alt_f4/alt_f4.collectionc
-render = /builtins/render/default.renderc
+main_collection = /examples/effects/spinning_aura/spinning_aura.collectionc
+render = /examples/_render/default.renderc
 
 [display]
 width = 1600
