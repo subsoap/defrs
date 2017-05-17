@@ -1,0 +1,10 @@
+-- Add this script as a GO with a #sprite component to be able to change that
+-- sprite's tint shader constant from the script properties
+-- using a sprite other than #sprite requires a custom version of this script
+
+go.property("tint",vmath.vector4(1.0, 1.0, 1.0, 1.0))
+
+function init(self)
+	sprite.set_constant("#sprite", "tint", go.get("#script", "tint"))
+	print( go.get("#script", "tint"))
+end

@@ -1,0 +1,27 @@
+local colors = require("defrs.utils.colors")
+
+function init(self)
+	pprint(colors.red)
+	pprint(colors.get_random_color())
+	
+	self.timer = 0
+	self.step = 1
+end
+
+function update(self, dt)
+	self.timer = self.timer + dt
+	if self.timer > 1 then
+		self.timer = self.timer - 1
+		self.step = self.step + 1
+		if self.step == 4 then
+			self.step = 1
+		end
+	end
+	if self.step == 1 then
+		go.set("#label","color",colors.red)
+	elseif self.step == 2 then
+		go.set("#label","color",colors.magenta)
+	elseif self.step == 3 then
+		go.set("#label","color",colors.get_random_color())
+	end
+end
