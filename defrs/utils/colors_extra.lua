@@ -16,8 +16,6 @@
 
 local M = {}
 
--- basic, obvious color names only
-
 M.black = vmath.vector4(0.0, 0.0, 0.0, 1.0)
 M.red = vmath.vector4(1.0, 0.0, 0.0, 1.0)
 M.yellow = vmath.vector4(1.0, 1.0, 0.0, 1.0)

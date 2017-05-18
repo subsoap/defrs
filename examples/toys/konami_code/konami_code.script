@@ -1,0 +1,39 @@
+-- ↑ ↑ ↓ ↓ ← → ← → b a
+
+local sequence = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}
+
+function check_sequence(events, self)
+	local matches = 0
+	for key, value in ipairs(events) do
+		if hash(sequence[key]) == value then
+			matches = matches + 1
+		else
+			self.events = {}
+			return false
+		end
+		if matches == #sequence then
+			return true
+		end
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.events = {}
+end
+
+
+function on_input(self, action_id, action)
+	if action.released then
+		local next_action = #self.events +1
+		self.events[next_action] = hash(action_id)
+		if(check_sequence(self.events, self)) then 
+			label.set_text("#label","Konami Code!")
+			print("Konami Code!") 
+			particlefx.play("/victory#particlefx")
+			self.events = {}
+		end
+		pprint(self.events)
+	end
+end
+
