@@ -1,5 +1,9 @@
 -- ↑ ↑ ↓ ↓ ← → ← → b a
 
+local colors = require("defrs.utils.colors")
+
+
+
 local sequence = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}
 
 function check_sequence(events, self)
@@ -20,6 +24,9 @@ end
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.events = {}
+	
+	self.timer = 0
+	self.konami_code = false
 end
 
 
@@ -32,8 +39,19 @@ function on_input(self, action_id, action)
 			print("Konami Code!") 
 			particlefx.play("/victory#particlefx")
 			self.events = {}
+			self.konami_code = true
+			go.animate(".","scale.x",go.PLAYBACK_LOOP_PINGPONG,5,go.EASING_INOUTEXPO,3)
+			go.animate(".","scale.y",go.PLAYBACK_LOOP_PINGPONG,5.5,go.EASING_INOUTEXPO,3.1)
+			msg.post("#sound", "play_sound", {delay = 0, gain = 0.5})
 		end
 		pprint(self.events)
 	end
 end
 
+function update(self, dt)
+	self.timer = self.timer + dt
+
+	if self.konami_code == true then
+		go.set("#label","color",colors.get_random_color())
+	end
+end
