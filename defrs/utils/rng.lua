@@ -8,6 +8,20 @@ function M.setup_rng()
 	math.random(); math.random(); math.random() -- clear bad rng	
 end
 
+function M.random(first, second)
+	if first == nil then
+		return math.random()
+	elseif second == nil then
+		return math.random(first)
+	else
+		return math.random(first, second)
+	end
+end
+
+function M.randomseed(seed)
+	math.randomseed(seed)
+end
+
 M.setup_rng()
 
 return M
