@@ -5,5 +5,14 @@ tile_margin: 0
 tile_spacing: 0
 collision: ""
 material_tag: "tile"
+animations {
+  id: "1"
+  start_tile: 1
+  end_tile: 1
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 extrude_borders: 2
 inner_padding: 0

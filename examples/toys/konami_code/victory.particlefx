@@ -14,8 +14,8 @@ emitters {
     z: 0.0
     w: 1.0
   }
-  tile_source: "/builtins/graphics/particle_blob.tilesource"
-  animation: "anim"
+  tile_source: "/examples/toys/identicons/identicons.tilesource"
+  animation: "1"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_DEFAULT
@@ -222,6 +222,30 @@ emitters {
     key: PARTICLE_KEY_RED
     points {
       x: 0.0
+      y: 4.769231
+      t_x: 1.0
+      t_y: 0.0
+    }
+    points {
+      x: 0.24332425
+      y: 2.7881057
+      t_x: 0.082226455
+      t_y: 0.9966137
+    }
+    points {
+      x: 0.48038146
+      y: 5.339911
+      t_x: 0.17431384
+      t_y: -0.9846901
+    }
+    points {
+      x: 0.72070843
+      y: 0.8331522
+      t_x: 0.047560856
+      t_y: -0.99886835
+    }
+    points {
+      x: 1.0
       y: 1.0
       t_x: 1.0
       t_y: 0.0
@@ -231,6 +255,30 @@ emitters {
     key: PARTICLE_KEY_GREEN
     points {
       x: 0.0
+      y: 0.46153846
+      t_x: 1.0
+      t_y: 0.0
+    }
+    points {
+      x: 0.058583107
+      y: 3.0
+      t_x: 1.0
+      t_y: 0.0
+    }
+    points {
+      x: 0.35122615
+      y: 2.0921628
+      t_x: 0.3467285
+      t_y: -0.9379655
+    }
+    points {
+      x: 0.7337875
+      y: 6.9860644
+      t_x: 0.41234502
+      t_y: -0.9110278
+    }
+    points {
+      x: 1.0
       y: 1.0
       t_x: 1.0
       t_y: 0.0
@@ -240,6 +288,30 @@ emitters {
     key: PARTICLE_KEY_BLUE
     points {
       x: 0.0
+      y: 3.0769231
+      t_x: 1.0
+      t_y: 0.0
+    }
+    points {
+      x: 0.24168937
+      y: 4.615144
+      t_x: 0.3099638
+      t_y: -0.9507484
+    }
+    points {
+      x: 0.5228883
+      y: 1.9238497
+      t_x: 0.17169112
+      t_y: -0.9851508
+    }
+    points {
+      x: 0.9348774
+      y: 5.5170865
+      t_x: 0.3088133
+      t_y: -0.9511227
+    }
+    points {
+      x: 1.0
       y: 1.0
       t_x: 1.0
       t_y: 0.0

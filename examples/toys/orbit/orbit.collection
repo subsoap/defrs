@@ -1,6 +1,6 @@
 name: "default"
 instances {
-  id: "screen_size"
+  id: "_screen_size"
   prototype: "/defrs/gui/screen_size.go"
   position {
     x: 0.0
