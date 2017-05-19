@@ -1,0 +1,53 @@
+local orbs = {}
+
+local rng = require("defrs.utils.rng")
+
+function make_point(x,y)
+	local count = #orbs + 1
+	orbs[count] = factory.create("#factory", vmath.vector3(rng.random(25, 100), rng.random(25, 100), 0.0))
+end
+
+
+
+
+function init(self)
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+	make_point()
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

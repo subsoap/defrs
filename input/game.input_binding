@@ -34,6 +34,18 @@ key_trigger {
   input: KEY_B
   action: "b"
 }
+key_trigger {
+  input: KEY_W
+  action: "w"
+}
+key_trigger {
+  input: KEY_S
+  action: "s"
+}
+key_trigger {
+  input: KEY_D
+  action: "d"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_1
   action: "touch"
