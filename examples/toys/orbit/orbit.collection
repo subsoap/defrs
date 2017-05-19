@@ -265,6 +265,10 @@ embedded_instances {
 embedded_instances {
   id: "pixel_ship"
   children: "exhaust"
+  children: "exhaust_forward_1"
+  children: "exhaust_forward_2"
+  children: "exhaust_left"
+  children: "exhaust_right"
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/examples/toys/orbit/pixel_ship.script\"\n"
@@ -424,6 +428,146 @@ embedded_instances {
   scale3 {
     x: 1.0
     y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "exhaust_forward_1"
+  data: "components {\n"
+  "  id: \"particlefx\"\n"
+  "  component: \"/examples/toys/orbit/exhaust.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 4.411
+    y: 6.469
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.9321409
+    w: 0.36209583
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+    z: 0.5
+  }
+}
+embedded_instances {
+  id: "exhaust_forward_2"
+  data: "components {\n"
+  "  id: \"particlefx\"\n"
+  "  component: \"/examples/toys/orbit/exhaust.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 4.411
+    y: -5.391
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.9278735
+    w: -0.37289518
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+    z: 0.5
+  }
+}
+embedded_instances {
+  id: "exhaust_right"
+  data: "components {\n"
+  "  id: \"particlefx\"\n"
+  "  component: \"/examples/toys/orbit/exhaust.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 4.411
+    y: -5.391
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.9278735
+    w: -0.37289518
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "exhaust_left"
+  data: "components {\n"
+  "  id: \"particlefx\"\n"
+  "  component: \"/examples/toys/orbit/exhaust.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 4.411
+    y: 6.469
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: -0.9321409
+    w: 0.36209583
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
     z: 1.0
   }
 }

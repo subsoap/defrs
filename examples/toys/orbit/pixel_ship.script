@@ -19,13 +19,55 @@ function final(self)
 end
 
 function update(self, dt)
-	if self.exhaust_playing == false then
-		particlefx.play("/exhaust#particlefx")
-		self.exhaust_playing = true
-	end	
-	if self.key_pressed == false then 
+	if self.exhaust_playing_w == false then
 		particlefx.stop("/exhaust#particlefx")
-		self.exhaust_playing = false 
+		particlefx.play("/exhaust#particlefx")
+		particlefx.play("/exhaust#particlefx")
+		particlefx.play("/exhaust#particlefx")
+		self.exhaust_playing_w = true
+	end	
+	if self.key_pressed_w == false then 
+		particlefx.stop("/exhaust#particlefx")
+		self.exhaust_playing_w = false 
+	end	
+
+	if self.exhaust_playing_s == false then
+		particlefx.stop("/exhaust_forward_1#particlefx")
+		particlefx.stop("/exhaust_forward_2#particlefx")		
+		particlefx.play("/exhaust_forward_1#particlefx")
+		particlefx.play("/exhaust_forward_2#particlefx")
+		self.exhaust_playing_s = true
+	end	
+	if self.key_pressed_s == false then 
+		particlefx.stop("/exhaust_forward_1#particlefx")
+		particlefx.stop("/exhaust_forward_2#particlefx")
+		self.exhaust_playing_s = false 
+	end	
+	
+	if self.exhaust_playing_d == false then
+		particlefx.stop("/exhaust_left#particlefx")
+		particlefx.stop("/exhaust_left#particlefx")		
+		particlefx.play("/exhaust_left#particlefx")
+		particlefx.play("/exhaust_left#particlefx")
+		self.exhaust_playing_d = true
+	end	
+	if self.key_pressed_d == false then 
+		particlefx.stop("/exhaust_left#particlefx")
+		particlefx.stop("/exhaust_left#particlefx")
+		self.exhaust_playing_d = false 
+	end		
+	
+	if self.exhaust_playing_a == false then
+		particlefx.stop("/exhaust_right#particlefx")
+		particlefx.stop("/exhaust_right#particlefx")		
+		particlefx.play("/exhaust_right#particlefx")
+		particlefx.play("/exhaust_right#particlefx")
+		self.exhaust_playing_a = true
+	end	
+	if self.key_pressed_a == false then 
+		particlefx.stop("/exhaust_right#particlefx")
+		particlefx.stop("/exhaust_right#particlefx")
+		self.exhaust_playing_a = false 
 	end	
 	
 	self.position = go.get_position()
@@ -77,11 +119,14 @@ function update(self, dt)
 	
 	local sun_direction = vmath.vector3(self.sun_position.x - self.position.x, self.sun_position.y - self.position.y, 0.0)
 	--pprint("sun direction " .. sun_direction)
-	local sun_impulse = vmath.vector3(sun_direction.x / vmath.length(sun_direction), sun_direction.y / vmath.length(sun_direction), 0.0) * 0.2
+	local sun_impulse = vmath.vector3(sun_direction.x / vmath.length(sun_direction), sun_direction.y / vmath.length(sun_direction), 0.0) * 0.07
 	--pprint("sun impulse " .. sun_impulse)
 	self.impulse = self.impulse + sun_impulse
 	
-	self.key_pressed = false
+	self.key_pressed_w = false
+	self.key_pressed_s = false
+	self.key_pressed_a = false
+	self.key_pressed_d = false	
 end
 
 function on_message(self, message_id, message, sender)
@@ -99,16 +144,17 @@ function on_input(self, action_id, action)
 	-- todo add acceleration when holding down keys
 	
 	if action_id == hash("w") then
+		self.direction.x, self.direction.y = rotate_2d_vector(self.direction, (math.random(-1,1)) * self.turning_speed * 0.15)
 		local correction = vmath.vector3(self.direction.x, self.direction.y * -1, 0.0)
 		self.impulse = self.impulse +  correction * 0.25
-		self.key_pressed = true
+		self.key_pressed_w = true
 		pprint(self.direction)
 		pprint("Impulse " .. self.impulse)
 	end
 	if action_id == hash("s") then
 		local correction = vmath.vector3(self.direction.x, self.direction.y * -1, 0.0)
-		self.impulse = self.impulse -  correction * 0.25
-		self.key_pressed = true
+		self.impulse = self.impulse -  correction * 0.15
+		self.key_pressed_s = true
 		pprint(self.direction)
 		pprint("Impulse " .. self.impulse)	
 	end
@@ -116,11 +162,13 @@ function on_input(self, action_id, action)
 	if action_id == hash("d") then
 		self.direction.x, self.direction.y = rotate_2d_vector(self.direction, self.turning_speed)
 		pprint(self.direction)
+		self.key_pressed_d = true
 		pprint("Impulse " .. self.impulse)
 	end
 	if action_id == hash("a") then
 		self.direction.x, self.direction.y = rotate_2d_vector(self.direction, -1 * self.turning_speed)
 		pprint(self.direction)
+		self.key_pressed_a = true
 		pprint("Impulse " .. self.impulse)
 	end	
 
