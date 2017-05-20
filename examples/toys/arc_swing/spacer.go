@@ -1,6 +1,6 @@
 components {
   id: "script"
-  component: "/defrs/scripts/sprite_set_tint_color.script"
+  component: "/defrs/scripts/go_set_scale.script"
   position {
     x: 0.0
     y: 0.0
@@ -13,17 +13,17 @@ components {
     w: 1.0
   }
   properties {
-    id: "tint"
-    value: "1.0,0.921,0.47,1.0"
-    type: PROPERTY_TYPE_VECTOR4
+    id: "scale"
+    value: "0.125,0.125,1.0"
+    type: PROPERTY_TYPE_VECTOR3
   }
 }
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/builtins/graphics/particle_blob.tilesource\"\n"
-  "default_animation: \"anim\"\n"
-  "material: \"/defrs/materials/sprite_normal.material\"\n"
+  data: "tile_set: \"/defrs/assets/textures/misc/misc.atlas\"\n"
+  "default_animation: \"pearl\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {

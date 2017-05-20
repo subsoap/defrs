@@ -1,0 +1,3 @@
+function init(self)
+    collectionfactory.create("#groundfactory", go.get_position("."), go.get_rotation("."), {}, 2)
+end

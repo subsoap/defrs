@@ -1,0 +1,27 @@
+-- refactor = don't constantly create new vectors
+local swing_distance = 625
+
+function radian_to_vector(radian)
+	return (vmath.vector3(math.cos(radian), math.sin(radian), 0.0))
+end
+
+function init(self)
+	go.set(".","scale.z",7 * math.pi / 6)
+	go.animate(".","scale.z",go.PLAYBACK_LOOP_PINGPONG,11 * math.pi / 6,go.EASING_INOUTSINE,4)
+end
+
+function update(self, dt)
+	local hanger_position = go.get_position("hanger")
+	local position = hanger_position + radian_to_vector(go.get(".","scale.z")) * swing_distance
+	go.set_position(position)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") then
+        --pprint(message)
+        --pprint(message.other_id)
+        --msg.post(message.other_id, "apply_force", {force = vmath.vector3(10000.0, -10000, 0), position = go.get_position(message.other_id)})
+        msg.post(message.other_id, "apply_force", { force = message.normal * message.distance * -60000, position =  message.position })
+        --msg.post("/bouncer_ball#collisionobject", "apply_force", { force = message.normal * message.distance * 100000, position =  message.position })
+    end
+end
