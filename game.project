@@ -8,7 +8,7 @@ custom_resources =
 game_binding = /input/game.input_bindingc
 
 [bootstrap]
-main_collection = /examples/toys/shooter/shooter.collectionc
+main_collection = /examples/toys/random_level/random_level.collectionc
 render = /examples/_render/default.renderc
 
 [display]
