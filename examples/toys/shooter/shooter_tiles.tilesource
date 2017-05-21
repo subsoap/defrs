@@ -1,0 +1,9 @@
+image: "/pyxels/shooter_tiles.png"
+tile_width: 32
+tile_height: 32
+tile_margin: 0
+tile_spacing: 0
+collision: ""
+material_tag: "tile"
+extrude_borders: 2
+inner_padding: 0
