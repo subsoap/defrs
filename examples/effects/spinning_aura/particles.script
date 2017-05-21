@@ -1,3 +1,4 @@
 function init(self)
 	particlefx.play("#particlefx")
+	
 end
