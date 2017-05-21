@@ -1,0 +1,142 @@
+local map = "/bg#tilemap"
+local tile_size = 32
+local movement_speed = 4 -- 1,2,4,8,16
+local map_size = {}
+
+function init(self)
+	
+	_, _, map_size.width, map_size.height = tilemap.get_bounds(map)	
+	
+	msg.post(".", "acquire_input_focus")
+	
+	self.left_held = false
+	self.right_held = false
+	self.up_held = false
+	self.down_held = false
+	self.total_input = 0
+	self.moving = false
+	self.current_position_x = 32*10
+	self.current_position_y = 32*10
+	self.target_position_x = 32*10
+	self.target_position_y = 32*10
+	self.direction = "down"
+	self.position = vmath.vector3(self.current_position_x, self.current_position_y, 0.1)
+	go.set_position(self.position)
+end
+
+function is_wall(x,y)
+	x = x +1
+	y = y +1
+	if x < 1 or y < 1 then return true end
+	if x > map_size.width or y > map_size.height then return true end
+	
+	local current_tile = tilemap.get_tile(map,"layer1",x,y)
+	if current_tile == 21 or current_tile == 22 or current_tile == 23 or current_tile == 24 then
+		return true
+	else
+		return false
+	end		
+end
+
+function clear_input(self)
+	self.left_held = false
+	self.right_held = false
+	self.up_held = false
+	self.down_held = false
+	self.total_input = 0
+end
+
+function update(self, dt)
+	
+	
+	
+	if self.current_position_x == self.target_position_x and self.current_position_y == self.target_position_y then
+		self.moving = false
+		msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+	end	
+	
+	if self.total_input == 1 then -- punish the sin of greed
+		if self.moving == false then
+			if self.left_held == true then
+				self.direction = "left"
+				if is_wall(self.current_position_x / tile_size - 1, self.current_position_y / tile_size) then
+					msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+				else
+					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
+					self.target_position_x = self.current_position_x - tile_size
+					self.moving = true
+				end
+			elseif self.right_held == true then
+				self.direction = "right"
+				if is_wall(self.current_position_x / tile_size + 1, self.current_position_y / tile_size) then
+					msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+				else
+					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
+					self.target_position_x = self.current_position_x + tile_size
+					self.moving = true
+				end				
+			elseif self.up_held == true then
+				self.direction = "up"
+				if is_wall(self.current_position_x / tile_size, self.current_position_y / tile_size + 1) then
+					msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+				else
+					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
+					self.target_position_y = self.current_position_y + tile_size
+					self.moving = true
+				end				
+			elseif self.down_held == true then
+				self.direction = "down"
+				if is_wall(self.current_position_x / tile_size, self.current_position_y / tile_size - 1) then
+					msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+				else
+					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
+					self.target_position_y = self.current_position_y - tile_size
+					self.moving = true
+				end				
+			end
+		end
+	end
+		
+	if self.moving == true then
+		if self.current_position_x < self.target_position_x then
+			self.current_position_x = self.current_position_x + movement_speed
+		elseif self.current_position_x > self.target_position_x then
+			self.current_position_x = self.current_position_x - movement_speed
+		end
+		if self.current_position_y < self.target_position_y then
+			self.current_position_y = self.current_position_y + movement_speed
+		elseif self.current_position_y > self.target_position_y then
+			self.current_position_y = self.current_position_y - movement_speed
+		end		
+		
+		self.position.x = self.current_position_x
+		self.position.y = self.current_position_y
+		go.set_position(self.position)
+		
+	end
+	
+
+	
+	clear_input(self)
+end
+
+
+
+function on_input(self, action_id, action)
+	if action_id == hash("left") then
+		self.left_held = true
+		self.total_input = self.total_input + 1
+	end
+	if action_id == hash("right") then
+		self.right_held = true
+		self.total_input = self.total_input + 1
+	end
+	if action_id == hash("up") then
+		self.up_held = true
+		self.total_input = self.total_input + 1
+	end
+	if action_id == hash("down") then
+		self.down_held = true
+		self.total_input = self.total_input + 1
+	end			
+end
