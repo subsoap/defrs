@@ -36,3 +36,6 @@ bundle_identifier = com.subsoap.deffx
 [osx]
 bundle_identifier = com.subsoap.deffx
 
+[windows]
+app_icon = /target_resources/windows/defold.ico
+
