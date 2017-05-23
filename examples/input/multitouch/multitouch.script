@@ -1,0 +1,87 @@
+local pprint = require("defrs.utils.prettify") -- normal pprint doesn't work with defcon
+
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+	
+	
+	self.multitouch_count = 0
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+
+end
+
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") and action.touch == nil then
+		label.set_text("#label", "Test this on a device with a touchscreen...") 
+		local position = vmath.vector3(action.x, action.y, 0.0)
+		go.set_position(position, "/poof_1")
+		particlefx.play("/poof_1#particlefx")			
+	end
+	if action_id == hash("multitouch") and action.touch ~= nil then
+		if action_id == hash("multitouch") then print("multitouch") end
+		for i,v in ipairs(action.touch) do
+			
+				if v.released == false then self.multitouch_count = self.multitouch_count + 1 end
+				local position = vmath.vector3(v.x, v.y, 0.0)
+				go.set_position(position, "/poof_" .. i)
+				particlefx.play("/poof_" .. i .. "#particlefx")
+			
+		end
+		label.set_text("#label", "Count: " .. self.multitouch_count .. " Raw: " .. #action.touch) 
+		print(count)
+	end
+
+	--if action_id == hash("touch") then print("touch") end
+end
+
+--[[
+function on_input(self, action_id, action)
+	if action_id == ACTION_TOUCH then
+		if not self.multi_touch then
+			handle_touch(self, action)
+		end
+	elseif action_id == ACTION_TOUCH_MULTI then
+		self.multi_touch = true
+
+		if not self.touch_id then
+			local touch_id = #action.touch
+			local touch = action.touch[touch_id]
+			if touch.pressed and gui.pick_node(self.btn_stick, touch.x, touch.y) then
+				self.touch_id = touch_id
+			end
+		end
+		if self.touch_id then
+			local touch = action.touch[self.touch_id]
+			if touch then
+				handle_touch(self, touch)
+				if touch.released then
+					self.touch_id = nil
+				end
+			else
+				self.touch_id = nil
+			end
+		end
+	end
+end
+--]]
+
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

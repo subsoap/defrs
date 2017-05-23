@@ -127,7 +127,7 @@ print(recursive_factorial(4)) -- 4! = 4*3*2 = 24
 
 --- get time in milliseconds
 -- multiply by 10k to get a whole number
-require('socket')
+require('builtins/scripts/socket')
 print(socket.gettime() * 10000)
 
 --- pause execution for some time
