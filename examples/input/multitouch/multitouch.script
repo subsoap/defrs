@@ -4,7 +4,6 @@ local sysinfo = sys.get_sys_info()
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-
 end
 
 function final(self)
@@ -13,6 +12,8 @@ function final(self)
 end
 
 function update(self, dt)
+
+
 	-- Add update code here
 	-- Remove this function if not needed
 	

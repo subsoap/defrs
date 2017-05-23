@@ -20,6 +20,7 @@ function init(self)
 	self.target_position_x = 32*10
 	self.target_position_y = 32*10
 	self.direction = "down"
+	self.priority_keys = {up = true, down = true, left = true, right = true}
 	self.position = vmath.vector3(self.current_position_x, self.current_position_y, 0.1)
 	go.set_position(self.position)
 end
@@ -53,9 +54,26 @@ function update(self, dt)
 	if self.current_position_x == self.target_position_x and self.current_position_y == self.target_position_y then
 		self.moving = false
 		msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
-	end	
+	end
+	
+	if self.total_input == 2 then
+		if self.left_held == true then
+			self.priority_keys.left = false
+		end
+		if self.right_held == true then
+			self.priority_keys.right = false
+		end
+		if self.up_held == true then
+			self.priority_keys.up = false
+		end
+		if self.down_held == true then
+			self.priority_keys.down = false
+		end		
+	end
+	
 	
 	if self.total_input == 1 then -- punish the sin of greed
+		
 		if self.moving == false then
 			if self.left_held == true then
 				self.direction = "left"
@@ -65,6 +83,7 @@ function update(self, dt)
 					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
 					self.target_position_x = self.current_position_x - tile_size
 					self.moving = true
+					self.priority_keys.left = false
 				end
 			elseif self.right_held == true then
 				self.direction = "right"
@@ -74,6 +93,7 @@ function update(self, dt)
 					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
 					self.target_position_x = self.current_position_x + tile_size
 					self.moving = true
+					self.priority_keys.right = false
 				end				
 			elseif self.up_held == true then
 				self.direction = "up"
@@ -83,6 +103,7 @@ function update(self, dt)
 					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
 					self.target_position_y = self.current_position_y + tile_size
 					self.moving = true
+					self.priority_keys.up = false
 				end				
 			elseif self.down_held == true then
 				self.direction = "down"
@@ -92,9 +113,61 @@ function update(self, dt)
 					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
 					self.target_position_y = self.current_position_y - tile_size
 					self.moving = true
+					self.priority_keys.down = false
 				end				
 			end
 		end
+	elseif self.total_input == 2 then -- diagonals
+		if self.moving == false then
+			if self.left_held == true and self.up_held == true then
+				self.direction = "left"
+				if is_wall(self.current_position_x / tile_size - 1, self.current_position_y / tile_size + 1) then
+					msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+				else
+					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
+					self.target_position_x = self.current_position_x - tile_size
+					self.target_position_y = self.current_position_y + tile_size
+					self.moving = true
+					self.priority_keys.left = false
+				end
+			end
+			if self.left_held == true and self.down_held == true then
+				self.direction = "left"
+				if is_wall(self.current_position_x / tile_size - 1, self.current_position_y / tile_size - 1) then
+					msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+				else
+					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
+					self.target_position_x = self.current_position_x - tile_size
+					self.target_position_y = self.current_position_y - tile_size
+					self.moving = true
+					self.priority_keys.left = false
+				end
+			end			
+			if self.right_held == true  and self.up_held == true then
+				self.direction = "right"
+				if is_wall(self.current_position_x / tile_size + 1, self.current_position_y / tile_size + 1) then
+					msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+				else
+					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
+					self.target_position_x = self.current_position_x + tile_size
+					self.target_position_y = self.current_position_y + tile_size
+					self.moving = true
+					self.priority_keys.right = false
+				end				
+			end
+			if self.right_held == true  and self.down_held == true then
+				self.direction = "right"
+				if is_wall(self.current_position_x / tile_size + 1, self.current_position_y / tile_size - 1) then
+					msg.post("#sprite", "play_animation", {id = hash("bunny_" .. self.direction)})
+				else
+					msg.post("#sprite", "play_animation", {id = hash("bunny_moving_" .. self.direction)})
+					self.target_position_x = self.current_position_x + tile_size
+					self.target_position_y = self.current_position_y - tile_size
+					self.moving = true
+					self.priority_keys.right = false
+				end				
+			end
+		end		
 	end
 		
 	if self.moving == true then
@@ -117,12 +190,30 @@ function update(self, dt)
 	
 
 	
+	if self.left_held == false then self.priority_keys.left = true end
+	if self.right_held == false then self.priority_keys.right = true end
+	if self.up_held == false then self.priority_keys.up = true end
+	if self.down_held == false then self.priority_keys.down = true end
+
+	
+	
+	
+	label.set_text("/_labels#label_input", "INPUT: " .. self.total_input)
+	label.set_text("/_labels#label_priority", " LEFT: " .. tostring(self.priority_keys.left) .. " RIGHT: " .. tostring(self.priority_keys.right) .. " UP: " .. tostring(self.priority_keys.up) .. " DOWN: " .. tostring(self.priority_keys.down) )
+
 	clear_input(self)
+
 end
 
 
 
 function on_input(self, action_id, action)
+	
+
+	
+	pprint(self.priority_keys)
+	print(self.total_input)
+	
 	if action_id == hash("left") then
 		self.left_held = true
 		self.total_input = self.total_input + 1

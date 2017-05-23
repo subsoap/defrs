@@ -8,7 +8,7 @@ custom_resources =
 game_binding = /input/game.input_bindingc
 
 [bootstrap]
-main_collection = /examples/input/multitouch/multitouch.collectionc
+main_collection = /examples/toys/rpg_movement/rpg_movement.collectionc
 render = /examples/_render/default.renderc
 
 [display]
