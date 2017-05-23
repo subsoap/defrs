@@ -9,7 +9,7 @@
 
 
 
-local Buffer = require 'lua_stringbuffer'
+local Buffer = require 'defrs/utils/stringbuffer'
 
 
 

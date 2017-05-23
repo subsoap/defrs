@@ -1,6 +1,5 @@
 --- Generates UUIDs in version 4 format (randomly) only right now
 -- random seed is set once on module init
-require('socket')
 
 M = {}
 
@@ -23,7 +22,7 @@ function M.randomseed(seed)
 end
 
 function M.set_random_seed()
-  M.randomseed(socket.gettime()*10000)
+  M.randomseed(os.time()*10000)
 end
 
 function M.generate_UUID_version_4()
