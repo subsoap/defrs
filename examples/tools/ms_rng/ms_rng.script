@@ -1,0 +1,84 @@
+local ms_rng = require("defrs.utils.mersennetwister")
+
+
+
+function init(self)
+	
+	ms_rng.seed_mt()
+	-- 0 to 1, add more zeroes if needed
+	print(ms_rng.random(0,1000) * 0.001)
+	print(ms_rng.random(0,1000) * 0.001)
+	print(ms_rng.random(0,1000) * 0.001)
+	print(ms_rng.random(0,1000) * 0.001)
+	print(ms_rng.random(0,1000) * 0.001)	
+	
+	-- set seed, if seed is not set it will use os.time as seed
+	ms_rng.seed_mt(777)
+	-- min, max value
+	-- what you want most of the time
+	print(ms_rng.random(0,100))
+	print(ms_rng.random(0,100))
+	print(ms_rng.random(0,100))
+	print(ms_rng.random(0,100))
+	print(ms_rng.random(0,100))
+
+	ms_rng.seed_mt(777)
+	print(ms_rng.random(1))
+	print(ms_rng.random(2))
+	print(ms_rng.random(3))
+	print(ms_rng.random(4))
+	print(ms_rng.random(5))	
+	print(ms_rng.random(1))
+	print(ms_rng.random(2))
+	print(ms_rng.random(3))
+	print(ms_rng.random(4))
+	print(ms_rng.random(5))
+	print(ms_rng.random(1))
+	print(ms_rng.random(2))
+	print(ms_rng.random(3))
+	print(ms_rng.random(4))
+	print(ms_rng.random(5))	
+	
+	ms_rng.seed_mt(777)
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())	
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())	
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())
+	print(ms_rng.random())	
+	
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
