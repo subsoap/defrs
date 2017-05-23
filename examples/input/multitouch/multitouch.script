@@ -1,8 +1,10 @@
 local pprint = require("defrs.utils.prettify") -- normal pprint doesn't work with defcon
 
+local sysinfo = sys.get_sys_info()
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+
 end
 
 function final(self)
@@ -26,7 +28,7 @@ end
 
 
 function on_input(self, action_id, action)
-	if action_id == hash("touch") and action.touch == nil then
+	if action_id == hash("touch") and sysinfo.system_name ~= "Android" and sysinfo.system_name ~= "iPhone OS" then
 		label.set_text("#label", "Test this on a device with a touchscreen...") 
 		local position = vmath.vector3(action.x, action.y, 0.0)
 		go.set_position(position, "/poof_1")
@@ -38,8 +40,9 @@ function on_input(self, action_id, action)
 			
 				if v.released == false then self.multitouch_count = self.multitouch_count + 1 end
 				local position = vmath.vector3(v.x, v.y, 0.0)
-				go.set_position(position, "/poof_" .. i)
-				particlefx.play("/poof_" .. i .. "#particlefx")
+				go.set_position(position, "/poof_" .. v.id + 1 )
+				particlefx.play("/poof_" .. v.id + 1 .. "#particlefx")
+				print(v.id)
 			
 		end
 		label.set_text("#label", "Count: " .. self.multitouch_count .. " Raw: " .. #action.touch) 
