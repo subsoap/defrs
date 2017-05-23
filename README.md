@@ -14,12 +14,31 @@ Once installed, you can use the resources you wish to use from their associated 
 
 Check the source files and examples for full usage.
 
+## Toys
+* Swing of an arc (arc_swing)
+* Random and seed based generation of identicons
+* Space movement showing moving by vectors (orbit)
+* Classic RPG style tile movement
+
+## Utils
+* Set of easy to use colors
+* Mersenne Twister PRNG
+
 ## Input
 
 * Handling Alt+F4 to close game on Windows
+* Multitouch with unique ID for each finger
+* Detecting the konami code or other cheat codes
+
+## Effects
+
+* How to make a spinning spell aura in orthographic view
 
 ## Particle FX
 
 ## Helper Scripts
+* Set scale of GO based on properties
+* Set color tint of Sprite based on properties
+
 
 ## Templates
