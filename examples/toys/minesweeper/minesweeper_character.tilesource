@@ -10,7 +10,7 @@ animations {
   id: "character_dead"
   start_tile: 8
   end_tile: 8
-  playback: PLAYBACK_ONCE_FORWARD
+  playback: PLAYBACK_LOOP_FORWARD
   fps: 30
   flip_horizontal: 0
   flip_vertical: 0

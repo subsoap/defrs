@@ -1,41 +1,152 @@
-
-
+function reset_game(self)
+	self.mouse_down = false
+	self.mouse_right_down = false
+	self.mouse_right_was_down = false
+	self.timer = 0
+	self.board = {}
+	self.board.mines = 0
+	self.game_over = false
+	self.game_started = false
+	self.mouse_x = 0
+	self.mouse_y = 0
+	self.active_tile = {}
+	self.restore_tile = {}
+	reset_board(self)
+end
 
 function reset_board(self)
-	self.board.mines = 40
+	self.board.mines = math.random(15, 100)
+	--self.board.mines = 15
+	self.board.mines_displayed = self.board.mines
+	self.board.mines_placed = 0
 	self.board.cells = {}
-	_,_,w,h = tilemap.get_bounds("/board#tilemap")
-	for i=1,w,1 do
-		for j=1,h,1 do
+	_,_,self.board.w,self.board.h = tilemap.get_bounds("/board#tilemap")
+	for i=1,self.board.w,1 do
+		for j=1,self.board.h,1 do
 			tilemap.set_tile("/board#tilemap","layer1",i,j,10)
 			self.board.cells[i .. "," .. j] = {}
 			self.board.cells[i .. "," .. j].revealed = false
 			self.board.cells[i .. "," .. j].bomb = false
+			self.board.cells[i .. "," .. j].flagged = false
+			self.board.cells[i .. "," .. j].mystery = false
 			self.board.cells[i .. "," .. j].neighbors = 0
 			self.board.cells[i .. "," .. j].x = i
 			self.board.cells[i .. "," .. j].y = j
 		end
 	end
+	while self.board.mines_placed < self.board.mines do
+		local random_x = math.random(1, self.board.w)
+		local random_y = math.random(1, self.board.h)
+		if self.board.cells[random_x .. "," .. random_y].bomb == false then
+			self.board.cells[random_x .. "," .. random_y].bomb = true
+			self.board.mines_placed = self.board.mines_placed + 1
+		end
+	end
+	for i=1,self.board.w,1 do
+		for j=1,self.board.h,1 do
+			self.board.cells[i .. "," .. j].neighbors = count_bombs(i,j, self)
+		end
+	end	
 end
 
-function check_cell(x,y,self)
-	
-	
+
+function game_over(self)
+	for i=1,self.board.w,1 do
+		for j=1,self.board.h,1 do
+			if self.board.cells[i .. "," .. j].revealed == false then
+				self.board.cells[i .. "," .. j].revealed = true
+				if self.board.cells[i .. "," .. j].bomb == true then
+					tilemap.set_tile("/board#tilemap","layer1",i,j,13)
+				elseif self.board.cells[i .. "," .. j].neighbors > 0 then
+					if self.board.cells[i .. "," .. j].flagged == true then
+						tilemap.set_tile("/board#tilemap","layer1",i,j,14)
+					else
+						tilemap.set_tile("/board#tilemap","layer1",i,j,1 + self.board.cells[i .. "," .. j].neighbors)
+					end
+				else
+					if self.board.cells[i .. "," .. j].flagged == true then
+						tilemap.set_tile("/board#tilemap","layer1",i,j,14)
+					else					
+						tilemap.set_tile("/board#tilemap","layer1",i,j,1)
+					end
+				end
+			end
+		end
+	end
+	msg.post("/character#sprite", "play_animation", {id = hash("character_dead")})
+	self.game_over = true
 end
 
-function reveal_cell(self)
-	self.board.cells[self.restore_tile.x .. "," .. self.restore_tile.y].revealed = true
-	tilemap.set_tile("/board#tilemap","layer1",self.restore_tile.x,self.restore_tile.y,1)
-	
-	pprint(self.board.cells[self.restore_tile.x .. "," .. self.restore_tile.y])
-	
-	self.restore_tile.x = nil
-	self.restore_tile.y = nil
-	
+
+function count_bombs(x,y,self)
+	local total_bombs = 0
+	for x_offset=-1, 1, 1 do
+		for y_offset=-1, 1,1 do
+			local x_position = x + x_offset
+			local y_position = y + y_offset
+			if x_position >= 1 and x_position <= self.board.w and y_position >=1 and y_position <= self.board.h then
+				local neighbor = self.board.cells[x_position .. "," .. y_position]
+				if neighbor.bomb == true then
+					total_bombs = total_bombs + 1
+				end
+			end
+		end
+	end
+	return total_bombs
+end
+
+function flood_fill(cell, self)
+	for x_offset=-1, 1, 1 do
+		for y_offset=-1, 1,1 do
+			local x_position = cell.x + x_offset
+			local y_position = cell.y + y_offset
+			if x_position >= 1 and x_position <= self.board.w and y_position >=1 and y_position <= self.board.h then
+				local neighbor = self.board.cells[x_position .. "," .. y_position]
+				if neighbor.revealed ~= true and neighbor.bomb ~= true and neighbor.flagged ~= true then
+					reveal_cell(neighbor, self)
+				end
+			end
+		end
+	end
+end
+
+function check_victory(self)
+	if self.game_over == true then return false end
+	local total_bombs = 0
+	local total_cells = 0
+	for i=1,self.board.w,1 do
+		for j=1,self.board.h,1 do
+			if self.board.cells[i .. "," .. j].bomb == true then
+				total_bombs = total_bombs + 1
+			elseif self.board.cells[i .. "," .. j].revealed then
+				total_cells = total_cells + 1
+			end
+		end
+	end
+	if total_bombs + total_cells == self.board.w * self.board.h then
+		print("Victory!")
+		self.game_over = true
+		msg.post("/character#sprite", "play_animation", {id = hash("character_win")})
+	end
+end
+
+function reveal_cell(cell, self)
+	self.board.cells[cell.x .. "," .. cell.y].revealed = true
+	local bomb_neighbors = self.board.cells[cell.x .. "," .. cell.y].neighbors
+	if self.board.cells[cell.x .. "," .. cell.y].bomb == true then
+		tilemap.set_tile("/board#tilemap","layer1",cell.x,cell.y,12)
+		game_over(self)
+	elseif bomb_neighbors > 0 then
+		tilemap.set_tile("/board#tilemap","layer1",cell.x,cell.y,1+bomb_neighbors)
+	else
+		flood_fill(cell, self)
+		tilemap.set_tile("/board#tilemap","layer1",cell.x,cell.y,1)
+	end
 end
 
 function clear_inputs(self)
 	self.mouse_down = false
+	self.mouse_right_down = false
 end
 
 function update_timer_display(self)
@@ -51,7 +162,7 @@ end
 
 
 function update_mine_display(self)
-	self.mine_display = self.board.mines
+	self.mine_display = self.board.mines_displayed
 	self.mine_display_1 = self.mine_display % 10
 	self.mine_display_10 = math.floor(self.mine_display /10) % 10
 	self.mine_display_100  = math.floor(self.mine_display /100) % 10
@@ -106,8 +217,12 @@ end
 
 function restore_tiles(self)
 	if self.restore_tile.x ~= nil then
-		
-		tilemap.set_tile("/board#tilemap","layer1",self.restore_tile.x,self.restore_tile.y,10)
+		local cell = self.board.cells[self.restore_tile.x .. "," .. self.restore_tile.y]
+		if cell.mystery == false then
+			tilemap.set_tile("/board#tilemap","layer1",self.restore_tile.x,self.restore_tile.y,10)
+		else
+			tilemap.set_tile("/board#tilemap","layer1",self.active_tile.x,self.active_tile.y,15)
+		end
 		self.restore_tile.x = nil
 		self.restore_tile.y = nil
 	end
@@ -115,27 +230,56 @@ end
 
 
 function init(self)
+	math.randomseed(os.time())
+	math.random();math.random();math.random();
 	msg.post(".", "acquire_input_focus")
-	self.mouse_down = false
-	self.timer = 0
-	self.board = {}
-	self.board.mines = 0
-	self.game_over = false
-	self.game_started = false
-	self.mouse_x = 0
-	self.mouse_y = 0
-	self.active_tile = {}
-	self.restore_tile = {}
-	reset_board(self)
+
+	reset_game(self)
 end
 
 function update(self, dt)
 	
+	if self.mouse_right_down == false and self.mouse_right_was_down == true and mouse_within_board(self) and self.game_over == false then
+		self.active_tile.x, self.active_tile.y = which_tile_over(self)
+		if self.active_tile.x >= 1 and self.active_tile.y >= 1 and self.board.cells[self.active_tile.x .. "," .. self.active_tile.y].revealed == false then -- fix bug causing this
+			local cell = self.board.cells[self.active_tile.x .. "," .. self.active_tile.y]
+			if cell.flagged == false and cell.mystery == false then
+				cell.flagged = true
+				tilemap.set_tile("/board#tilemap","layer1",self.active_tile.x,self.active_tile.y,11)
+				self.board.mines_displayed = self.board.mines_displayed - 1
+			elseif cell.flagged == true then
+				self.board.mines_displayed = self.board.mines_displayed + 1
+				cell.flagged = false
+				cell.mystery = true
+				tilemap.set_tile("/board#tilemap","layer1",self.active_tile.x,self.active_tile.y,15)
+			elseif cell.mystery == true then
+				tilemap.set_tile("/board#tilemap","layer1",self.active_tile.x,self.active_tile.y,10)
+				cell.mystery = false
+			end
+		end	
+		self.mouse_right_was_down = false
+	else
+		self.mouse_right_was_down = false
+	end
+	
+	if self.mouse_right_down == true then
+		self.mouse_right_was_down = true
+	end
 	
 	if self.mouse_down == false and self.restore_tile.x ~= nil then
 		if self.game_started == false then self.game_started = true end
-		reveal_cell(self)
-		print("do something!")
+		local cell = self.board.cells[self.restore_tile.x .. "," .. self.restore_tile.y]
+		if cell.flagged == false then
+			local cell = {}
+			cell.x = self.restore_tile.x
+			cell.y = self.restore_tile.y
+			reveal_cell(cell, self)
+			self.restore_tile.x = nil
+			self.restore_tile.y = nil
+			check_victory(self)
+		end
+
+
 	end
 	
 	restore_tiles(self)
@@ -149,23 +293,40 @@ function update(self, dt)
 	end
 
 	
-	if self.game_started then
+	if self.game_started and self.game_over == false then
 		self.timer = self.timer + dt
 	end
 	
 	update_timer_display(self)
 	update_mine_display(self)
 	
-	if self.mouse_down == true and mouse_within_board(self) then
+	if self.mouse_down == true and mouse_within_board(self) and self.game_over == false then
 		self.active_tile.x, self.active_tile.y = which_tile_over(self)
 		if self.active_tile.x >= 1 and self.active_tile.y >= 1 and self.board.cells[self.active_tile.x .. "," .. self.active_tile.y].revealed == false then -- fix bug causing this
-			tilemap.set_tile("/board#tilemap","layer1",self.active_tile.x,self.active_tile.y,1)
-			self.restore_tile.x = self.active_tile.x
-			self.restore_tile.y = self.active_tile.y
-			msg.post("/character#sprite", "play_animation", {id = hash("character_worried")})
+			local cell = self.board.cells[self.active_tile.x .. "," .. self.active_tile.y]
+			if cell.flagged == false then
+				if cell.mystery == false then
+					tilemap.set_tile("/board#tilemap","layer1",self.active_tile.x,self.active_tile.y,1)
+				else
+					tilemap.set_tile("/board#tilemap","layer1",self.active_tile.x,self.active_tile.y,16)
+				end
+				
+				
+				self.restore_tile.x = self.active_tile.x
+				self.restore_tile.y = self.active_tile.y
+				msg.post("/character#sprite", "play_animation", {id = hash("character_worried")})
+			end
 		end
-	else
+	elseif self.game_over == false  then
 		msg.post("/character#sprite", "play_animation", {id = hash("character_normal")})
+	end
+
+
+	if self.mouse_down == false and self.mouse_pressing_reset == true then
+		reset_game(self)
+		self.mouse_pressing_reset = false
+	else
+		self.mouse_pressing_reset = false
 	end
 
 	if self.mouse_down then
@@ -174,6 +335,7 @@ function update(self, dt)
 		if check_bounding_box(character_position.x, character_position.y, 64, 64, self.mouse_down_start_position_x, self.mouse_down_start_position_y, 1, 1) then 
 			if check_bounding_box(character_position.x, character_position.y, 64, 64, self.mouse_x, self.mouse_y, 1, 1) then
 				msg.post("/character#sprite", "play_animation", {id = hash("character_pressed")})
+				self.mouse_pressing_reset = true
 			end
 		end
 	end	
@@ -193,5 +355,10 @@ function on_input(self, action_id, action)
 		self.mouse_x = action.x
 		self.mouse_y = action.y
 	end
+	if action_id == hash("right_click") then
+		self.mouse_right_down = true
+		self.mouse_x = action.x
+		self.mouse_y = action.y
+	end	
 end
 
