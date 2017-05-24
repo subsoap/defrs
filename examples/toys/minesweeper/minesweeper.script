@@ -1,0 +1,197 @@
+
+
+
+function reset_board(self)
+	self.board.mines = 40
+	self.board.cells = {}
+	_,_,w,h = tilemap.get_bounds("/board#tilemap")
+	for i=1,w,1 do
+		for j=1,h,1 do
+			tilemap.set_tile("/board#tilemap","layer1",i,j,10)
+			self.board.cells[i .. "," .. j] = {}
+			self.board.cells[i .. "," .. j].revealed = false
+			self.board.cells[i .. "," .. j].bomb = false
+			self.board.cells[i .. "," .. j].neighbors = 0
+			self.board.cells[i .. "," .. j].x = i
+			self.board.cells[i .. "," .. j].y = j
+		end
+	end
+end
+
+function check_cell(x,y,self)
+	
+	
+end
+
+function reveal_cell(self)
+	self.board.cells[self.restore_tile.x .. "," .. self.restore_tile.y].revealed = true
+	tilemap.set_tile("/board#tilemap","layer1",self.restore_tile.x,self.restore_tile.y,1)
+	
+	pprint(self.board.cells[self.restore_tile.x .. "," .. self.restore_tile.y])
+	
+	self.restore_tile.x = nil
+	self.restore_tile.y = nil
+	
+end
+
+function clear_inputs(self)
+	self.mouse_down = false
+end
+
+function update_timer_display(self)
+	self.timer_display = math.min(math.floor(self.timer), 999)
+	self.timer_display_1 = self.timer_display % 10
+	self.timer_display_10 = math.floor(self.timer_display /10) % 10
+	self.timer_display_100  = math.floor(self.timer_display /100) % 10
+	
+	tilemap.set_tile("/total_time#tilemap","layer1",3,1,22 + self.timer_display_1)
+	tilemap.set_tile("/total_time#tilemap","layer1",2,1,22 + self.timer_display_10)
+	tilemap.set_tile("/total_time#tilemap","layer1",1,1,22 + self.timer_display_100)
+end
+
+
+function update_mine_display(self)
+	self.mine_display = self.board.mines
+	self.mine_display_1 = self.mine_display % 10
+	self.mine_display_10 = math.floor(self.mine_display /10) % 10
+	self.mine_display_100  = math.floor(self.mine_display /100) % 10
+	
+	tilemap.set_tile("/mines_left#tilemap","layer1",3,1,22 + self.mine_display_1)
+	tilemap.set_tile("/mines_left#tilemap","layer1",2,1,22 + self.mine_display_10)
+	tilemap.set_tile("/mines_left#tilemap","layer1",1,1,22 + self.mine_display_100)
+end
+
+function update_timer_display(self)
+	self.timer_display = math.min(math.floor(self.timer), 999)
+	self.timer_display_1 = self.timer_display % 10
+	self.timer_display_10 = math.floor(self.timer_display /10) % 10
+	self.timer_display_100  = math.floor(self.timer_display /100) % 10
+	
+	tilemap.set_tile("/total_time#tilemap","layer1",3,1,22 + self.timer_display_1)
+	tilemap.set_tile("/total_time#tilemap","layer1",2,1,22 + self.timer_display_10)
+	tilemap.set_tile("/total_time#tilemap","layer1",1,1,22 + self.timer_display_100)
+end
+
+function check_bounding_box(x1,y1,w1,h1, x2,y2,w2,h2)
+	if x1 == nil or x2 == nil then return false end
+	return x1 < x2+w2 and
+		x2 < x1+w1 and
+		y1 < y2+h2 and
+		y2 < y1+h1
+end
+
+function mouse_within_board(self) 
+	if self.game_over == false then
+		local _,_,w,h = tilemap.get_bounds("/board#tilemap")
+		w = w * 32
+		h = h * 32
+		local go_position = go.get_position("/board")
+		if check_bounding_box(go_position.x,go_position.y,w,h, self.mouse_x, self.mouse_y, 1,1) then
+			return true
+		else
+			return false
+		end
+	end
+end
+
+function which_tile_over(self)
+		local _,_,w,h = tilemap.get_bounds("/board#tilemap")
+		w = w * 32
+		h = h * 32
+		local board_position = go.get_position("/board")
+		local cell_x = math.floor((self.mouse_x - board_position.x) / 32) + 1
+		local cell_y = math.floor((self.mouse_y - board_position.y) / 32) + 1
+		return cell_x , cell_y
+end
+
+function restore_tiles(self)
+	if self.restore_tile.x ~= nil then
+		
+		tilemap.set_tile("/board#tilemap","layer1",self.restore_tile.x,self.restore_tile.y,10)
+		self.restore_tile.x = nil
+		self.restore_tile.y = nil
+	end
+end
+
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.mouse_down = false
+	self.timer = 0
+	self.board = {}
+	self.board.mines = 0
+	self.game_over = false
+	self.game_started = false
+	self.mouse_x = 0
+	self.mouse_y = 0
+	self.active_tile = {}
+	self.restore_tile = {}
+	reset_board(self)
+end
+
+function update(self, dt)
+	
+	
+	if self.mouse_down == false and self.restore_tile.x ~= nil then
+		if self.game_started == false then self.game_started = true end
+		reveal_cell(self)
+		print("do something!")
+	end
+	
+	restore_tiles(self)
+	
+	if self.mouse_down == false then
+		self.mouse_down_start_position_x = nil
+		self.mouse_down_start_position_y = nil
+	elseif self.mouse_down_start_position_x == nil then
+		self.mouse_down_start_position_x = self.mouse_x
+		self.mouse_down_start_position_y = self.mouse_y
+	end
+
+	
+	if self.game_started then
+		self.timer = self.timer + dt
+	end
+	
+	update_timer_display(self)
+	update_mine_display(self)
+	
+	if self.mouse_down == true and mouse_within_board(self) then
+		self.active_tile.x, self.active_tile.y = which_tile_over(self)
+		if self.active_tile.x >= 1 and self.active_tile.y >= 1 and self.board.cells[self.active_tile.x .. "," .. self.active_tile.y].revealed == false then -- fix bug causing this
+			tilemap.set_tile("/board#tilemap","layer1",self.active_tile.x,self.active_tile.y,1)
+			self.restore_tile.x = self.active_tile.x
+			self.restore_tile.y = self.active_tile.y
+			msg.post("/character#sprite", "play_animation", {id = hash("character_worried")})
+		end
+	else
+		msg.post("/character#sprite", "play_animation", {id = hash("character_normal")})
+	end
+
+	if self.mouse_down then
+		local character_position = go.get_position("/character")
+	
+		if check_bounding_box(character_position.x, character_position.y, 64, 64, self.mouse_down_start_position_x, self.mouse_down_start_position_y, 1, 1) then 
+			if check_bounding_box(character_position.x, character_position.y, 64, 64, self.mouse_x, self.mouse_y, 1, 1) then
+				msg.post("/character#sprite", "play_animation", {id = hash("character_pressed")})
+			end
+		end
+	end	
+	
+	
+	clear_inputs(self)
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") then
+		self.mouse_down = true
+		self.mouse_x = action.x
+		self.mouse_y = action.y
+	end
+end
+

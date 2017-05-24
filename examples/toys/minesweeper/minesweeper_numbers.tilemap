@@ -1,0 +1,29 @@
+tile_set: "/examples/toys/minesweeper/minesweeper_numbers.tilesource"
+layers {
+  id: "layer1"
+  z: 0.0
+  is_visible: 1
+  cell {
+    x: 0
+    y: 0
+    tile: 20
+    h_flip: 0
+    v_flip: 0
+  }
+  cell {
+    x: 1
+    y: 0
+    tile: 20
+    h_flip: 0
+    v_flip: 0
+  }
+  cell {
+    x: 2
+    y: 0
+    tile: 20
+    h_flip: 0
+    v_flip: 0
+  }
+}
+material: "/defrs/materials/tile_map_pixelart.material"
+blend_mode: BLEND_MODE_ALPHA
