@@ -8,7 +8,7 @@ custom_resources = text
 game_binding = /input/game.input_bindingc
 
 [bootstrap]
-main_collection = /examples/input/text_typing/text_typing.collectionc
+main_collection = /examples/tools/easing_equations/easing_equations.collectionc
 render = /examples/_render/default.renderc
 
 [display]

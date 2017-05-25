@@ -1,0 +1,48 @@
+local easing = require("defrs.utils.easing_equations")
+
+function init(self)
+	self.timer = 0
+	self.position = go.get_position("/visual")
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	
+ 
+	self.timer = self.timer + dt
+	
+	local position = self.position
+	
+	
+	position.y = easing.out_bounce(math.abs(math.sin(self.timer)),1,1.5,1) * -100 + 400
+	
+	
+	go.set_position(position, "/visual")
+	
+	label.set_text("/labels#label",easing.out_bounce(math.abs(math.sin(self.timer)),1,1.5,1))
+	
+	--easing.linear(math.abs(math.sin(self.timer),beginning_value,change,duration_total)
+	--easing.out_bounce(time_current,beginning_value,change,duration_total)
+	
+	--easing.linear(time_current,beginning_value,change,duration_total)
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
