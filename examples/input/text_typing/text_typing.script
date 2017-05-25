@@ -1,0 +1,58 @@
+local word_list_short = require("text.english_words_short")
+
+
+function init(self)
+	math.randomseed( os.time() )
+	math.random();math.random();math.random();
+	-- Add initialization code here
+	-- Remove this function if not needed
+	msg.post(".", "acquire_input_focus")
+	self.text_counter = 0
+	self.last_text_counter = 0
+	self.last_text = ""
+	self.text = ""
+	
+	self.counter = 0
+	
+	self.word_list_count = #word_list_short
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	self.counter = self.counter + dt
+	label.set_text("/_labels#label",self.text)
+	
+	if self.counter > 1 then
+		self.counter = self.counter -1
+		local random_word = word_list_short[math.random(1, self.word_list_count)]
+		self.text = self.text .. " " ..  random_word
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("text") then
+		self.text = self.text .. action.text
+	end
+	if (action_id == hash("enter") or action_id == hash("enter_kp")) and action.released then
+		self.text = self.text .. "\n"
+	end
+	if action_id == hash("backspace") and action.released then
+		self.text = self.text:sub(1, -2)
+	end
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

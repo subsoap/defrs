@@ -2,13 +2,13 @@
 title = DefRS
 version = 1.0
 dependencies = https://github.com/britzl/defcon/archive/master.zip, https://github.com/britzl/defnet/archive/3.1.zip
-custom_resources = 
+custom_resources = text
 
 [input]
 game_binding = /input/game.input_bindingc
 
 [bootstrap]
-main_collection = /examples/toys/minesweeper/minesweeper.collectionc
+main_collection = /examples/input/text_typing/text_typing.collectionc
 render = /examples/_render/default.renderc
 
 [display]
