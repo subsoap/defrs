@@ -1,0 +1,110 @@
+local ms_rng = require("defrs.utils.mersennetwister")
+
+
+
+
+
+local function clear_texture(self, color)
+	for y=0, self.size-1 do
+		for x=0, self.size-1 do
+			local index = y * self.size * 3 + x * 3 + 1
+			self.stream[index + 0] = color.x * math.sin(x * self.size)
+			self.stream[index + 1] = color.y
+			self.stream[index + 2] = color.z * math.sin(x * self.size)
+		end
+	end
+
+end
+
+local function update_texture(self, time)
+	for y=0, self.size-1 do
+		for x=0, self.size-1 do
+			local index = y * self.size * 3 + x * 3 + 1
+			self.stream[index + 0] = self.clear_color.r * math.abs(math.sin(time))
+			self.stream[index + 1] = self.clear_color.g * ms_rng.random(1,2)
+			self.stream[index + 2] = self.clear_color.b * math.abs(math.cos(time))
+		end
+	end
+
+end
+
+
+local function reset(self)
+	self.clear_color = {}
+	self.clear_color.r = 175
+	self.clear_color.g = 200
+	self.clear_color.b = 125
+	self.clear_color.a = 1
+	
+	clear_texture(self, vmath.vector4(self.clear_color.r, self.clear_color.g, self.clear_color.b, self.clear_color.a))
+end
+
+
+function init(self)
+	self.timer = 0
+	
+	local first_path = go.get("#sprite1", "texture0")
+	local second_path = go.get("#sprite2", "texture0")
+	--local first_buffer = resource.load(first_path)
+	--resource.set_texture(path,table,buffer)
+	
+	
+	math.randomseed(0xf3f3f3)
+	
+	self.size = 64
+	
+	self.textureheader = { width  = self.size,
+							height = self.size,
+							type   = resource.TEXTURE_TYPE_2D,
+							format = resource.TEXTURE_FORMAT_RGB,
+							num_mip_maps = 1 }
+
+	self.buffer = buffer.create(self.size * self.size, { {name=hash("rgb"), type = buffer.VALUE_TYPE_UINT8, count = 3 }})
+	self.stream = buffer.get_stream(self.buffer, hash("rgb"))
+	
+	reset(self)
+end
+  
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+
+	self.timer = self.timer + dt
+
+
+	update_texture(self, self.timer)
+	
+	label.set_text("#label",tostring(math.floor(self.timer * 100) * 0.01))
+
+	if self.buffer ~= nil then
+		local path = go.get("#sprite1", "texture0")
+		resource.set_texture(path,self.textureheader,self.buffer)
+		
+		local path2 = go.get("#sprite3", "texture0")
+		resource.set_texture(path2,self.textureheader,self.buffer)		
+		
+		local path3 = go.get("#sprite4", "texture0")
+		resource.set_texture(path3,self.textureheader,self.buffer)	
+	
+		local path4 = go.get("#sprite5", "texture0")
+		resource.set_texture(path4,self.textureheader,self.buffer)				
+	end
+
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
