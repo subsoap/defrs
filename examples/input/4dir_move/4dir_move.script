@@ -1,0 +1,40 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.direction = vmath.vector3(1,0,0)
+	self.position = vmath.vector3(100,100,0)
+	self.turn_speed = 0.09
+	self.moving = false
+	self.speed = 10
+	go.set_position(self.position)
+end
+
+
+function update(self, dt)
+	self.direction = vmath.normalize(self.direction)
+	--pprint(self.direction)
+	if self.moving == true then
+		self.position = self.position + self.direction * self.speed
+		go.set_position(self.position)
+	end
+	self.moving = false
+end
+
+
+function on_input(self, action_id, action)
+	if action_id == hash("w") or action_id == hash("up") then
+		self.direction.y =  self.direction.y + self.turn_speed
+		self.moving = true
+	end
+	if action_id == hash("a") or action_id == hash("left") then
+		self.direction.x = self.direction.x - self.turn_speed
+		self.moving = true
+	end
+	if action_id == hash("s") or action_id == hash("down") then
+		self.direction.y = self.direction.y - self.turn_speed
+		self.moving = true
+	end
+	if action_id == hash("d") or action_id == hash("right") then
+		self.direction.x = self.direction.x + self.turn_speed
+		self.moving = true
+	end	
+end

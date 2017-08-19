@@ -7,10 +7,11 @@ local ms_rng = require("defrs.utils.mersennetwister")
 local function clear_texture(self, color)
 	for y=0, self.size-1 do
 		for x=0, self.size-1 do
-			local index = y * self.size * 3 + x * 3 + 1
-			self.stream[index + 0] = color.x * math.sin(x * self.size)
+			local index = y * self.size * 4 + x * 4 + 1
+			self.stream[index + 0] = color.x 
 			self.stream[index + 1] = color.y
-			self.stream[index + 2] = color.z * math.sin(x * self.size)
+			self.stream[index + 2] = color.z 
+			self.stream[index + 3] = color.w 
 		end
 	end
 
@@ -19,10 +20,29 @@ end
 local function update_texture(self, time)
 	for y=0, self.size-1 do
 		for x=0, self.size-1 do
-			local index = y * self.size * 3 + x * 3 + 1
+			local index = y * self.size * 4 + x * 4 + 1
 			self.stream[index + 0] = self.clear_color.r * math.abs(math.sin(time))
 			self.stream[index + 1] = self.clear_color.g * ms_rng.random(1,2)
 			self.stream[index + 2] = self.clear_color.b * math.abs(math.cos(time))
+			if y<10 then
+				self.stream[index + 0] = self.clear_color.r * math.abs(math.sin(time)) * (self.clear_color.a * math.abs(math.cos(time)))
+				self.stream[index + 1] = self.clear_color.g * ms_rng.random(1,2) * (self.clear_color.a * math.abs(math.cos(time)))
+				self.stream[index + 2] = self.clear_color.b * math.abs(math.cos(time))  * (self.clear_color.a * math.abs(math.cos(time)))
+				self.stream[index + 3] = self.clear_color.a * math.abs(math.cos(time))
+			elseif y>=25 and y < 35 then
+				self.stream[index + 0] = 0
+				self.stream[index + 1] = 0
+				self.stream[index + 2] = 0
+				self.stream[index + 3] = 0
+			elseif y>=40 and y < 45 then
+				self.stream[index + 0] = 100
+				self.stream[index + 1] = 100
+				self.stream[index + 2] = 100
+				self.stream[index + 3] = 0				
+				
+			else
+				self.stream[index + 3] = self.clear_color.a
+			end
 		end
 	end
 
@@ -34,7 +54,7 @@ local function reset(self)
 	self.clear_color.r = 175
 	self.clear_color.g = 200
 	self.clear_color.b = 125
-	self.clear_color.a = 1
+	self.clear_color.a = 255
 	
 	clear_texture(self, vmath.vector4(self.clear_color.r, self.clear_color.g, self.clear_color.b, self.clear_color.a))
 end
@@ -56,11 +76,11 @@ function init(self)
 	self.textureheader = { width  = self.size,
 							height = self.size,
 							type   = resource.TEXTURE_TYPE_2D,
-							format = resource.TEXTURE_FORMAT_RGB,
+							format = resource.TEXTURE_FORMAT_RGBA,
 							num_mip_maps = 1 }
 
-	self.buffer = buffer.create(self.size * self.size, { {name=hash("rgb"), type = buffer.VALUE_TYPE_UINT8, count = 3 }})
-	self.stream = buffer.get_stream(self.buffer, hash("rgb"))
+	self.buffer = buffer.create(self.size * self.size, { {name=hash("rgba"), type = buffer.VALUE_TYPE_UINT8, count = 4 }})
+	self.stream = buffer.get_stream(self.buffer, hash("rgba"))
 	
 	reset(self)
 end

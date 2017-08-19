@@ -8,7 +8,7 @@ custom_resources = text
 game_binding = /input/game.input_bindingc
 
 [bootstrap]
-main_collection = /examples/tools/texture_dynamic_buffer/texture_dynamic_buffer.collectionc
+main_collection = /examples/input/4dir_move/4dir_move.collectionc
 render = /builtins/render/default.renderc
 
 [display]
@@ -41,4 +41,7 @@ app_icon = /target_resources/windows/defold.ico
 
 [particle_fx]
 max_count = 256
+
+[html5]
+htmlfile = /examples/tools/html_run_code/index.html
 
