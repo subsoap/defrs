@@ -76,8 +76,8 @@ M.TOUCH              = hash("touch")
 -- Misc.
 M.LEFT_UNIT     = vmath.vector3(-1, 0, 0)
 M.RIGHT_UNIT    = vmath.vector3(1, 0, 0)
-M.SCREEN_WIDTH  = tonumber(sys.get_config("display.width"))
-M.SCREEN_HEIGHT = tonumber(sys.get_config("display.height"))
+M.SCREEN_WIDTH  = sys.get_config_number("display.width")
+M.SCREEN_HEIGHT = sys.get_config_number("display.height")
 M.SCREEN_CENTER = vmath.vector3(M.SCREEN_WIDTH / 2, M.SCREEN_HEIGHT / 2, 0)
 
 -- Lock all the things.
